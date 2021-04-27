@@ -19,7 +19,7 @@ Life is hard, so is the name.
 
 ## TO DO
 
-- [ ] Change the requirement 🌟🌟🌟🌟🌟
+- [x] Change the requirement 🌟🌟🌟🌟🌟
 - [ ] Base shell 🌟🌟🌟
   - [ ] @Annette0127, Organize all basic data structure and functions & Sort those according to importance
   - [ ] @WhiteLittleDuck, `对照代码和文档检查实现了哪些功能，梳理shell的代码结构`, [code](https://github.com/feross/clash), [document](https://web.stanford.edu/~ouster/cgi-bin/cs190-winter21/clash.php)
