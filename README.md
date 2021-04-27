@@ -17,7 +17,7 @@ A Simple Bash-Like Shell -- Dino Shell
 
 - [ ] Change the requirement 🌟🌟🌟🌟🌟
 - [ ] Base shell 🌟🌟🌟
-  - [] Organize all basic functions & Sort the above functions according to importance
+  - [ ] Organize all basic functions & Sort the above functions according to importance
 - [ ] Enhanced shell 🌟🌟
   - [ ] Search for achievable functions
 - [ ] Dino game 🌟🌟🌟🌟🌟
