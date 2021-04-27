@@ -21,9 +21,10 @@ Life is hard, so is the name.
 
 - [ ] Change the requirement 🌟🌟🌟🌟🌟
 - [ ] Base shell 🌟🌟🌟
-  - [ ] Organize all basic functions & Sort the above functions according to importance
+  - [ ] @Annette0127, Organize all basic data structure and functions & Sort those according to importance
+  - [ ] @WhiteLittleDuck, `对照代码和文档检查实现了哪些功能，梳理shell的代码结构`, [code](https://github.com/feross/clash), [document](https://web.stanford.edu/~ouster/cgi-bin/cs190-winter21/clash.php)
 - [ ] Enhanced shell 🌟🌟
-  - [ ] Search for achievable functions
+  - [ ] @Lanninger08, Search for achievable functions
 - [ ] Shell game 🌟🌟🌟🌟🌟
 
 ## Environment
