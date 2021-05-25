@@ -27,6 +27,7 @@ Shell::Shell(int argc, char* argv[]) {
         if (i != 0) all_args.append(argument);
     }
     env.SetVariable("*", all_args);
+    env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory());
 }
 
 bool Shell::ParseString(string& job_str) {
