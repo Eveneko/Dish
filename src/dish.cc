@@ -32,5 +32,25 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
-    return 0;
+    Shell shell(argc, argv);
+
+    string command = args.GetString("command");
+    if (!command.empty()) {
+        if (!shell.ParseString(command)) {
+            return -1;
+        }
+        return shell.RunJobsAndWait() ? EXIT_SUCCESS : -1;
+    }
+
+    vector<string> unnamed_args = args.GetUnnamed();
+    if (unnamed_args.size() > 0) {
+        const string& file_path = unnamed_args[0];
+        if (!shell.ParseFile(file_path)) {
+            // TODO return value 127
+            return 127;
+        }
+        return shell.RunJobsAndWait() ? EXIT_SUCCESS : -1;
+    }
+
+    return shell.StartRepl();
 }
