@@ -29,7 +29,7 @@ ssh ubuntu@bj.tencent.eveneko.com -i ./auth/guest.pem
 sudo su root
 ```
 
-> make clash: `error: readline/readline.h: No such file or directory`
+> make dish: `error: readline/readline.h: No such file or directory`
 
 ```
 apt-get install libreadline-dev
@@ -88,6 +88,10 @@ stat函数用来获取指定路径的文件或者文件夹的信息。
 
 检查所传的字符是否是字母和数字。
 
+> duplicate symbol
+
+`inline` / `static`
+ 
 #### `environment`
 
 > `extern` xxx
@@ -119,3 +123,4 @@ getcwd()会将当前工作目录的绝对路径复制到参数buffer所指的内
 > `getpwnam`
 
 getpwnam函数功能是获取用户登录相关信息。
+

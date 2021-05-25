@@ -46,4 +46,4 @@ class Pipeline {
          * List of all the commands that make up this pipeline.
          */
         vector<Command> commands;
-}
+};
