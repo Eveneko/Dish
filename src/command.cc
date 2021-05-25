@@ -44,12 +44,21 @@ bool Command::RunBuiltin() {
         if (words.size() == 1) {
             const string& home_directory = env.GetVariable("HOME");
             if (!home_directory.empty()) {
+                env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory().c_str());
                 ProcUtil::SetCurrentWorkingDirectory(home_directory);
+                printf("%s\n", ProcUtil::GetCurrentWorkingDirectory().c_str());
             } else {
                 printf("cd: HOME not set");
             }
         } else if (words.size() == 2) {
-            ProcUtil::SetCurrentWorkingDirectory(words[1]);
+            string tmp_lwd = env.GetVariable("lwd");
+            env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory().c_str());
+            if(words[1] == "-"){
+                ProcUtil::SetCurrentWorkingDirectory(tmp_lwd);
+            }else{
+                ProcUtil::SetCurrentWorkingDirectory(words[1]);
+            }
+            printf("%s\n", ProcUtil::GetCurrentWorkingDirectory().c_str());
         } else {
             printf("cd: Too many arguments\n");
         }
