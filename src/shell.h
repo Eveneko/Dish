@@ -27,6 +27,7 @@
 #include "environment.h"
 #include "job.h"
 #include "job-parser.h"
+#include "proc-util.h"
 
 using namespace std;
 

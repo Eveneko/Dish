@@ -32,3 +32,18 @@ string ProcUtil::GetUserHomeDirectory(const string& user) {
     char * home_dir = pw->pw_dir;
     return string(home_dir);
 }
+
+string ProcUtil::GetUserName(){
+    uid_t userid;  
+    struct passwd * pwd;  
+    userid = getuid();  
+    pwd = getpwuid(userid);  
+    return pwd->pw_name; 
+}
+
+string ProcUtil::GetHostName(){
+    char name[256] = {0};
+    gethostname(name, 256);
+    log(DEBUG, "%d", StringUtil::Split(name, ".")[0].length());
+    return StringUtil::Split(name, ".")[0];
+}
