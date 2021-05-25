@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "log.h"
 #include "environment.h"
 #include "job.h"
 #include "job-parser.h"
