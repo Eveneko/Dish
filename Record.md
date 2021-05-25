@@ -3,12 +3,12 @@
 <!-- TOC -->
 
 - [Record](#record)
-    - [Problem](#problem)
-        - [Server & Environment](#server--environment)
-        - [Makefile](#makefile)
-        - [Code](#code)
-            - [`file-util`](#file-util)
-            - [`environment`](#environment)
+  - [Problem](#problem)
+    - [Server & Environment](#server--environment)
+    - [Makefile](#makefile)
+    - [Code](#code)
+      - [`file-util`](#file-util)
+      - [`environment`](#environment)
 
 <!-- /TOC -->
 
