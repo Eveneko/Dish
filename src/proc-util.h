@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "string-util.h"
+
 using namespace std;
 
 class ProcUtil {
@@ -60,6 +62,10 @@ class ProcUtil {
          * @return A string representing a home directory path, or an empty string if the user does not exist on the system.
          */
         static string GetUserHomeDirectory(const string& user);
+
+        static string GetUserName();
+
+        static string GetHostName();
 };
 
 class ProcException : public exception {
