@@ -46,7 +46,6 @@ bool Command::RunBuiltin() {
             if (!home_directory.empty()) {
                 env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory().c_str());
                 ProcUtil::SetCurrentWorkingDirectory(home_directory);
-                printf("%s\n", ProcUtil::GetCurrentWorkingDirectory().c_str());
             } else {
                 printf("cd: HOME not set");
             }
@@ -55,10 +54,10 @@ bool Command::RunBuiltin() {
             env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory().c_str());
             if(words[1] == "-"){
                 ProcUtil::SetCurrentWorkingDirectory(tmp_lwd);
+                printf("%s\n", ProcUtil::GetCurrentWorkingDirectory().c_str());
             }else{
                 ProcUtil::SetCurrentWorkingDirectory(words[1]);
             }
-            printf("%s\n", ProcUtil::GetCurrentWorkingDirectory().c_str());
         } else {
             printf("cd: Too many arguments\n");
         }
