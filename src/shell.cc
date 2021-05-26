@@ -93,8 +93,14 @@ int Shell::StartRepl() {
     while (true) {
         char * prompt = NULL;
         if (isTTY) {
-            string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() + " $ ";
-            prompt = (char *) (remaining_job_str.length() == 0 ? prefix.c_str() : "> ");
+            if(remaining_job_str.length() == 0){
+                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName();
+                string coloredPath = " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m";
+                printf("%s%s", prefix.c_str(), coloredPath.c_str());
+                prompt = (char *)" $ ";
+            }else{
+                prompt = (char *)"> ";
+            }
         }
 
         char* line = readline(prompt);
