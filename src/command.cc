@@ -142,6 +142,20 @@ bool Command::RunBuiltin() {
         return true;
     }
 
+    if (program == "which") {
+        if (words.size() == 1) {
+            printf("which: Not enough arguments\n");
+        } else {
+            string path = env.FindProgramPath(words[1]);
+            if(path.length() == 0) {
+                printf("%s not found\n", words[1].c_str());
+            }else {
+                printf("%s\n", path.c_str());
+            }
+        }
+        return true;
+    }
+
     return false;
 }
 
