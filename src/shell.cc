@@ -1,5 +1,6 @@
 #include "shell.h"
 
+
 Shell::Shell(int argc, char* argv[]) {
     env.SetVariable("0", argv[0]);
     env.SetVariable("?", "0");
@@ -90,27 +91,42 @@ int Shell::StartRepl() {
     bool isTTY = isatty(STDIN_FILENO);
     debug("isTTY: %d", isTTY);
     string remaining_job_str;
+
+    char line[100];
+    char path[100];
+
+    History *history = new History();
+
     while (true) {
         char * prompt = NULL;
         if (isTTY) {
-            if(remaining_job_str.length() == 0){
-                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName();
-                string coloredPath = " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m";
-                printf("%s%s", prefix.c_str(), coloredPath.c_str());
-                prompt = (char *)" $ ";
-            }else{
-                prompt = (char *)"> ";
-            }
+            prompt = (char *) (remaining_job_str.length() == 0 ? "$ " : "> ");
         }
+        printf("%s",prompt);
+        
+        for(int i =0;i<100;i++){
+            line[i]='\0';
+        }
+        
+        getcwd(path, 100);
+        Reader *reader = Reader::getInstance();
 
-        char* line = readline(prompt);
-        if (line == NULL) {
+        int l = reader->getInputCommand(line,*history,path);
+
+        // char* line = readline(prompt);
+        // if (line == NULL) {
+        //     break;
+        // }
+        if (l == 0) {
             break;
         }
-
-        remaining_job_str.append(line);
+        char *line2;
+        strcpy(line2,line);
+        history->append(line);
+        // remaining_job_str.append(line);
+        remaining_job_str.append(line2);
         remaining_job_str.append("\n");
-        free(line);
+//        free(line);
 
         try {
             if (job_parser.IsPartialJob(remaining_job_str, env)) {
@@ -134,6 +150,8 @@ int Shell::StartRepl() {
         // TODO: return value 2
         return 2;
     }
+
+    // history->~History();
 
     return stoi(env.GetVariable("?"));
 }
