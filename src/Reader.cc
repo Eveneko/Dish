@@ -101,6 +101,9 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                     printf("%s\t", (*it).c_str());
                 }
                 printf("\n");
+                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+                printf("\r%s%s", prefix.c_str(), content);
             }
         } else {
             setData(lines, updatedCommand, content);
