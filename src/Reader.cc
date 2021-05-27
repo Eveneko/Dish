@@ -1,15 +1,5 @@
 
 #include "Reader.h"
-#include <termios.h>
-#include <cstdio>
-#include <cstring>
-#include <unistd.h>
-#include "SpecialInput/Up.h"
-#include "SpecialInput/Down.h"
-#include "SpecialInput/Left.h"
-#include "SpecialInput/Right.h"
-#include "SpecialInput/BackSpace.h"
-// #include "Exception/InputOutOfLimitException.h"
 
 Reader *Reader::instance = nullptr;
 
@@ -38,7 +28,6 @@ char Reader::get1char() {
     tcsetattr(0, TCSANOW, &new_settings);
 #endif
 
-    int ret = 0;
     char c;
 
 #ifdef _WIN32

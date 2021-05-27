@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define MAXCHAR 100
 
 Shell::Shell(int argc, char* argv[]) {
     env.SetVariable("0", argv[0]);
@@ -92,8 +92,8 @@ int Shell::StartRepl() {
     debug("isTTY: %d", isTTY);
     string remaining_job_str;
 
-    char line[100];
-    char path[100];
+    char line[MAXCHAR];
+    char path[MAXCHAR];
 
     History *history = new History();
 
@@ -104,11 +104,11 @@ int Shell::StartRepl() {
         }
         printf("%s",prompt);
         
-        for(int i =0;i<100;i++){
+        for(int i =0;i<MAXCHAR;i++){
             line[i]='\0';
         }
         
-        getcwd(path, 100);
+        getcwd(path, MAXCHAR);
         Reader *reader = Reader::getInstance();
 
         int l = reader->getInputCommand(line,*history,path);

@@ -1,5 +1,5 @@
 //
-// Created by Isaac_Chen on 2020/2/29.
+// 
 //
 
 #include "Right.h"
