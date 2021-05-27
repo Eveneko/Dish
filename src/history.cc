@@ -1,8 +1,5 @@
 // #include "history.h"
 #include "history.h"
-#include <cstdlib>
-#include <cstring>
-#include <string>
 
 
 History_elem::History_elem() {

@@ -1,10 +1,20 @@
 //
-// Created by Isaac_Chen on 2020/2/28.
+// 
 //
 //#ifndef SHELL_LOG_H
 //#define SHELL_LOG_H
 
 #include "history.h"
+#include <termios.h>
+#include <cstdio>
+#include <cstring>
+#include <unistd.h>
+#include "SpecialInput/Up.h"
+#include "SpecialInput/Down.h"
+#include "SpecialInput/Left.h"
+#include "SpecialInput/Right.h"
+#include "SpecialInput/BackSpace.h"
+// #include "Exception/InputOutOfLimitException.h"
 
 //#endif
 

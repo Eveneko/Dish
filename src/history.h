@@ -2,6 +2,10 @@
 #define DISH_HISTORY_H
 
 #include <vector>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+
 
 class History_elem{
 public:
