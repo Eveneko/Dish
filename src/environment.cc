@@ -94,6 +94,25 @@ string Environment::FindProgramPath(string& program_name)  {
     return first_program_path;
 }
 
+set<string> Environment::FindPossibleCommands(string& program_name){
+    string path = variables.count("PATH")
+        ? variables["PATH"]
+        : DEFAULT_PATH_VAR;
+
+    vector<string> search_paths = StringUtil::Split(path, ":");
+    set<string> ans;
+
+    for (string search_path : search_paths) {
+        vector<string> entries = FileUtil::GetDirectoryEntries(search_path);
+        for (string& entry : entries) {
+            if (entry.find(program_name)==0) {
+                ans.insert(entry);
+            }
+        }
+    }
+    return ans;
+}
+
 void Environment::PopulatePathCache() {
     path_cache.clear();
 

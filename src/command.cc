@@ -155,6 +155,22 @@ bool Command::RunBuiltin() {
         }
         return true;
     }
+    if (program == "tab") {
+        if (words.size() == 1) {
+            printf("which: Not enough arguments\n");
+        } else {
+            set<string> path = env.FindPossibleCommands(words[1]);
+            if(path.size() == 0) {
+                printf("%s not found\n", words[1].c_str());
+            }else {
+                for(set<string>::iterator it=path.begin() ;it!=path.end();it++)
+                {
+                    cout<<*it<<" occurs "<<endl;
+                }
+            }
+        }
+        return true;
+    }
 
     return false;
 }
