@@ -115,6 +115,8 @@ class Shell {
          * List of pending jobs to run when RunJobsAndWait() is called.
          */
         vector<Job> jobs;
+
+        History *history;
 };
 
 class ShellException : public exception {

@@ -16,6 +16,7 @@
 #include "file-util.h"
 #include "log.h"
 #include "proc-util.h"
+#include "history.h"
 
 using namespace std;
 

@@ -1,4 +1,3 @@
-// #include "history.h"
 #include "history.h"
 
 
@@ -43,7 +42,6 @@ void History::append(char *item) {
     History_elem *cur = new History_elem();
     cur->prev = tail;
     this->curr = cur;
-    // printf("tmp command: %s\n",tmp->command);
 }
 
 char *History::pop() {
@@ -153,4 +151,45 @@ bool History::match(const char *c1, const char *c2) {
         currentCommandPointer++;
     }
     return true;
+}
+
+void History::store_history(History *h, string path) {
+
+    ofstream outfile;
+    outfile.open(path);
+
+    History_elem *pointer = h->tail;
+    for (int i = 0; i < 16; ++i) {
+        pointer = pointer->prev;
+    }
+    pointer = pointer->next;
+    for (int i = 0; i < 16; ++i) {
+        outfile << pointer->command << endl;
+        pointer = pointer->next;
+    }
+    outfile.close();
+}
+
+History *History::read_history(string path) {
+    History *h1 = new History();
+    ifstream infile;
+    infile.open(path);
+
+    string line;
+    while (getline(infile, line)) {
+        line.erase(0, line.find_first_not_of(" "));
+        char *c = const_cast<char *>((line.c_str()));
+        h1->append(c);
+    }
+    return h1;
+}
+
+void History::print_history(History *h) {
+    printf("%s\n", h->head->command);
+    History_elem *p = h->head;
+    cout << h->head;
+    while (p) {
+        printf("%s\n", p->command);
+        p = p->next;
+    }
 }
