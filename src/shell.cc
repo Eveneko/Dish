@@ -1,4 +1,5 @@
 #include "shell.h"
+#define MAXCHAR 100
 
 Shell::Shell(int argc, char* argv[]) {
     env.SetVariable("0", argv[0]);
@@ -91,27 +92,47 @@ int Shell::StartRepl() {
     bool isTTY = isatty(STDIN_FILENO);
     debug("isTTY: %d", isTTY);
     string remaining_job_str;
+
+    char line[MAXCHAR];
+    char path[MAXCHAR];
+
+    history = new History();
+
     while (true) {
-        char * prompt = NULL;
         if (isTTY) {
             if(remaining_job_str.length() == 0){
-                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName();
-                string coloredPath = " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m";
-                printf("%s%s", prefix.c_str(), coloredPath.c_str());
-                prompt = (char *)" $ ";
+                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                                + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+                printf("%s", prefix.c_str());
             }else{
-                prompt = (char *)"> ";
+                printf("%s", "> ");
             }
         }
-
-        char* line = readline(prompt);
-        if (line == NULL) {
-            break;
+        
+        for(int i =0;i<MAXCHAR;i++){
+            line[i]='\0';
         }
+        
+        getcwd(path, MAXCHAR);
+        Reader *reader = Reader::getInstance(env);
 
-        remaining_job_str.append(line);
+        int l = reader->getInputCommand(line, *history, path);
+
+        // char* line = readline(prompt);
+        // if (line == NULL) {
+        //     break;
+        // }
+        if (l == 0) {
+            // break;
+            continue;
+        }
+        char line2[MAXCHAR];
+        strcpy(line2,line);
+        history->append(line);
+        // remaining_job_str.append(line);
+        remaining_job_str.append(line2);
         remaining_job_str.append("\n");
-        free(line);
+//        free(line);
 
         try {
             if (job_parser.IsPartialJob(remaining_job_str, env)) {
@@ -135,6 +156,8 @@ int Shell::StartRepl() {
         // TODO: return value 2
         return 2;
     }
+
+    // history->~History();
 
     return stoi(env.GetVariable("?"));
 }

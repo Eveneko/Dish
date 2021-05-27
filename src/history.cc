@@ -1,10 +1,5 @@
 #include "history.h"
-#include <cstring>
-#include <string>
-#include <iostream>
-#include <fstream>
 
-using namespace std;
 
 History_elem::History_elem() {
     this->command = nullptr;

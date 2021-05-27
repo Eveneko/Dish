@@ -29,6 +29,10 @@
 #include "job-parser.h"
 #include "proc-util.h"
 
+
+#include "Reader.h"
+#include "history.h"
+#include <unistd.h>
 using namespace std;
 
 class Shell {
@@ -111,6 +115,8 @@ class Shell {
          * List of pending jobs to run when RunJobsAndWait() is called.
          */
         vector<Job> jobs;
+
+        History *history;
 };
 
 class ShellException : public exception {

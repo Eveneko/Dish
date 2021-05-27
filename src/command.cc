@@ -156,6 +156,12 @@ bool Command::RunBuiltin() {
         return true;
     }
 
+    // if (program == "history") {
+    //     if (words.size() == 1) {
+    //         History::print_history();
+    //     }
+    // }
+
     return false;
 }
 
