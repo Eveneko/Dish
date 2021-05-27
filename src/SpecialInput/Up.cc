@@ -3,10 +3,6 @@
 //
 
 #include "Up.h"
-#include <cstdio>
-#include <unistd.h>
-#include <cstring>
-#include "KeyboardOperation.h"
 
 #ifndef MAX_PATH
 #define MAX_PATH 512
@@ -19,10 +15,14 @@ char *Up::onClick(char *&lines, History &history, char *content, int &length, ch
     char *searchResult = history.lastCommand(content);
     CLEAR_OUTPUT_LINE();
     if (searchResult != nullptr) {
-        printf("\r$ %s", searchResult);
+        std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+        printf("\r%s%s", prefix.c_str(), searchResult);
         length = strlen(searchResult);
     } else {
-        printf("\r$ %s", content);
+        std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+        printf("\r%s%s", prefix.c_str(), content);
     }
     lines = content + length;
     return searchResult;

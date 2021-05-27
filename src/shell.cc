@@ -98,18 +98,22 @@ int Shell::StartRepl() {
     History *history = new History();
 
     while (true) {
-        char * prompt = NULL;
         if (isTTY) {
-            prompt = (char *) (remaining_job_str.length() == 0 ? "$ " : "> ");
+            if(remaining_job_str.length() == 0){
+                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                                + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+                printf("%s", prefix.c_str());
+            }else{
+                printf("%s", "> ");
+            }
         }
-        printf("%s",prompt);
         
         for(int i =0;i<MAXCHAR;i++){
             line[i]='\0';
         }
         
         getcwd(path, MAXCHAR);
-        Reader *reader = Reader::getInstance();
+        Reader *reader = Reader::getInstance(env);
 
         int l = reader->getInputCommand(line,*history,path);
 

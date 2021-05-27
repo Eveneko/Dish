@@ -6,6 +6,10 @@
 #define SHELL_DOWN_H
 
 #include "SpecialInput.h"
+#include <cstdio>
+#include <unistd.h>
+#include "KeyboardOperation.h"
+#include "proc-util.h"
 
 class Down : public SpecialInput {
 private:

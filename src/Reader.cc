@@ -3,12 +3,13 @@
 
 Reader *Reader::instance = nullptr;
 
-Reader::Reader() {
+Reader::Reader(Environment& e) {
+    env = e;
 }
 
-Reader *Reader::getInstance() {
+Reader *Reader::getInstance(Environment& e) {
     if (Reader::instance == nullptr) {
-        Reader::instance = new Reader();
+        Reader::instance = new Reader(e);
     }
     return Reader::instance;
 }
@@ -87,6 +88,19 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                     SpecialInput *left = Left::getInstance();
                     left->onClick(lines, history, content, length, path);
                 }
+            }
+        } else if (c == '\t') {
+            string tmp_cmd = content;
+            set<string> path = env.FindPossibleCommands(tmp_cmd);
+            printf("\n");
+            if(path.size() == 0) {
+                printf("%s not found\n", lines);
+            }else {
+                for(set<string>::iterator it=path.begin() ;it!=path.end();it++)
+                {
+                    printf("%s\t", (*it).c_str());
+                }
+                printf("\n");
             }
         } else {
             setData(lines, updatedCommand, content);

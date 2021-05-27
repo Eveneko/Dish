@@ -14,6 +14,7 @@
 #include "SpecialInput/Left.h"
 #include "SpecialInput/Right.h"
 #include "SpecialInput/BackSpace.h"
+#include "environment.h"
 // #include "Exception/InputOutOfLimitException.h"
 
 //#endif
@@ -31,10 +32,12 @@
 class Reader {
     static Reader *instance;
 
-    Reader();
+    Reader(Environment& env);
 
 public:
-    static Reader *getInstance();
+    static Reader *getInstance(Environment& env);
+
+    Environment env;
 
     char get1char();
 

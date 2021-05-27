@@ -2,11 +2,7 @@
 // 
 //
 
-#include <cstdio>
-#include <unistd.h>
 #include "BackSpace.h"
-#include "KeyboardOperation.h"
-#include "Left.h"
 
 #ifndef MAX_PATH
 #define MAX_PATH 512
@@ -21,7 +17,9 @@ Backspace::Backspace() {
 char *Backspace::onClick(char *&lines, History &history, char *content, int &length, char *path) {
     if (length == 0 || lines == content) {
         CLEAR_OUTPUT_LINE();
-        printf("\r$ %s", content);
+        std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+        printf("\r%s%s", prefix.c_str(), content);
         return content;
     }
     int l = 0;
@@ -36,7 +34,9 @@ char *Backspace::onClick(char *&lines, History &history, char *content, int &len
         }
     }
     CLEAR_OUTPUT_LINE();
-    printf("\r$ %s" ,content);
+    std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                    + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+    printf("\r%s%s", prefix.c_str(), content);
     if (lines - content != length) {
         MOVE_LEFT(l - 1);
     } else {

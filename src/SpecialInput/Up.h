@@ -5,7 +5,12 @@
 #ifndef SHELL_UP_H
 #define SHELL_UP_H
 
+#include <cstdio>
+#include <unistd.h>
+#include <cstring>
+#include "KeyboardOperation.h"
 #include "SpecialInput.h"
+#include "proc-util.h"
 
 class Up : public SpecialInput {
 private:

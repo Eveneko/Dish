@@ -3,9 +3,6 @@
 //
 
 #include "Left.h"
-#include <cstdio>
-#include <unistd.h>
-#include "KeyboardOperation.h"
 
 #ifndef MAX_PATH
 #define MAX_PATH 512
@@ -20,7 +17,9 @@ Left::Left() {
 char *Left::onClick(char *&lines, History &history, char *content, int &length, char *path) {
     STORE_CURSOR();
     CLEAR_OUTPUT_LINE();
-    printf("\r$ %s", content);
+    std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+    printf("\r%s%s", prefix.c_str(), content);
     RESTORE_CURSOR();
     if (lines != content) {
         lines--;

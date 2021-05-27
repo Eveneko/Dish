@@ -5,7 +5,11 @@
 #ifndef SHELL_LEFT_H
 #define SHELL_LEFT_H
 
+#include <cstdio>
+#include <unistd.h>
+#include "KeyboardOperation.h"
 #include "SpecialInput.h"
+#include "proc-util.h"
 
 class Left : public SpecialInput {
 private:

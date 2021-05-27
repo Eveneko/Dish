@@ -3,9 +3,6 @@
 //
 
 #include "Down.h"
-#include <cstdio>
-#include <unistd.h>
-#include "KeyboardOperation.h"
 
 #ifndef MAX_PATH
 #define MAX_PATH 512
@@ -22,9 +19,13 @@ char *Down::onClick(char *&lines, History &history, char *content, int &length, 
     char *searchResult = history.nextCommand(content);
     CLEAR_OUTPUT_LINE();
     if (searchResult != nullptr) {
-        printf("\r$ %s", searchResult);
+        std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+        printf("\r%s%s", prefix.c_str(), searchResult);
     } else {
-        printf("\r$ %s", content);
+        std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+        printf("\r%s%s", prefix.c_str(), content);
     }
     lines = content + length;
     return searchResult;
