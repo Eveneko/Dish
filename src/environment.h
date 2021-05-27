@@ -97,6 +97,8 @@ class Environment {
          */
         string FindProgramPath(string& program_name);
 
+        set<string> FindPossibleCommands(string& program_name);
+
     private:
         void PopulatePathCache();
         /**

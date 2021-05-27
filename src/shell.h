@@ -29,6 +29,10 @@
 #include "job-parser.h"
 #include "proc-util.h"
 
+
+#include "Reader.h"
+#include "history.h"
+#include <unistd.h>
 using namespace std;
 
 class Shell {
