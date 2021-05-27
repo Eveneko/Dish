@@ -28,6 +28,7 @@ Shell::Shell(int argc, char* argv[]) {
     }
     env.SetVariable("*", all_args);
     env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory());
+    env.SetVariable("history", ProcUtil::GetCurrentWorkingDirectory());
 }
 
 bool Shell::ParseString(string& job_str) {
