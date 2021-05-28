@@ -103,6 +103,7 @@ int Shell::StartRepl() {
             if(remaining_job_str.length() == 0){
                 string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                                 + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+                // int l_num=history->curr->line_number;                
                 printf("%s", prefix.c_str());
             }else{
                 printf("%s", "> ");
