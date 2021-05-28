@@ -2,31 +2,43 @@
 
 
 History_elem::History_elem() {
+    this->line_number=0;
     this->command = nullptr;
     this->prev = nullptr;
     this->next = nullptr;
 }
 
-History_elem::History_elem(char *command) {
+History_elem::History_elem(char *command,int line_number) {
+    this->line_number=line_number;
     this->command = command;
     this->prev = nullptr;
     this->next = nullptr;
 }
 
 History::History() {
+    this->line_count = 0;
     this->head = nullptr;
     this->tail = nullptr;
     this->curr = nullptr;
+    this->moveToEnd();
 }
 
 History::~History() {
     free(this);
 }
 
+void History::moveToEnd(){
+    History_elem *cur = new History_elem();
+    cur->prev = tail;
+    this->curr = cur;
+}
+
 void History::append(char *item) {
+    this->line_count+=1;
     History_elem *tmp = (History_elem *) malloc(sizeof(History_elem));
     if (tmp == NULL) exit(1);
     tmp->command = (char *) malloc(sizeof(char) * (strlen(item) + 1));
+    tmp->line_number=this->line_count;
     if (tmp->command == NULL) exit(1);
     strcpy(tmp->command, item);
     tmp->next = NULL;
@@ -39,9 +51,7 @@ void History::append(char *item) {
         this->tail->next = tmp;
         this->tail = this->tail->next;
     }
-    History_elem *cur = new History_elem();
-    cur->prev = tail;
-    this->curr = cur;
+    this->moveToEnd();
 }
 
 char *History::pop() {
@@ -76,34 +86,35 @@ unsigned int History::size() {
     return cnt;
 }
 
-char *History::lastSimilarCommand(char *c) {
-    while (head != nullptr && curr->prev != nullptr) {
-        curr = curr->prev;
-        if (match(c, curr->command)) {
-            return curr->command;
+History_elem *History::lastSimilarCommand(char *c) {
+    if (head == nullptr) {
+       return nullptr;
+    }
+    History_elem *ptr = curr; 
+    while (ptr->prev != nullptr) {
+        ptr = ptr->prev;
+        if (match(c, ptr->command)) {
+            curr=ptr;
+            return curr;
         }
     }
-    if (head == nullptr) {
-        return nullptr;
-    } else if (curr != nullptr) {
-        if (match(c, curr->command)) {
-            return curr->command;
-        }
+    if (curr->line_number!=0) {
+        return curr;
     }
     return nullptr;
 }
 
-char *History::nextSimilarCommand(char *c) {
+History_elem *History::nextSimilarCommand(char *c) {
     while (tail != nullptr && curr->next != nullptr) {
         curr = curr->next;
         if (match(c, curr->command)) {
-            return curr->command;
+            return curr;
         }
     }
     return nullptr;
 }
 
-char *History::lastCommand(char *c) {
+History_elem *History::lastCommand(char *c) {
     if (c == nullptr) {
         return lastUsedCommand();
     } else {
@@ -111,7 +122,7 @@ char *History::lastCommand(char *c) {
     }
 }
 
-char *History::nextCommand(char *c) {
+History_elem *History::nextCommand(char *c) {
     if (c == nullptr) {
         return nextUsedCommand();
     } else {
@@ -119,21 +130,21 @@ char *History::nextCommand(char *c) {
     }
 }
 
-char *History::lastUsedCommand() {
+History_elem *History::lastUsedCommand() {
     if (curr->prev != nullptr) {
-        char *res = curr->prev->command;
+        History_elem *res = curr->prev;
         curr = curr->prev;
         return res;
     } else if (head != nullptr) {
-        return head->command;
+        return head;
     } else {
         return nullptr;
     }
 }
 
-char *History::nextUsedCommand() {
+History_elem *History::nextUsedCommand() {
     if (curr->next != nullptr) {
-        char *res = curr->next->command;
+        History_elem *res = curr->next;
         curr = curr->next;
         return res;
     } else {

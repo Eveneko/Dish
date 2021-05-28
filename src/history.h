@@ -12,18 +12,21 @@ using namespace std;
 
 class History_elem{
 public:
+    int line_number;
     char *command;
     History_elem *prev;
     History_elem *next;
 
     History_elem();
 
-    History_elem(char *command);
+    // History_elem(char *command);
+    History_elem(char *command,int line_number);
 
 };
 
 class History {
     public:
+        int line_count;
         History_elem *head;
         History_elem *tail;
         History_elem *curr;
@@ -40,24 +43,26 @@ class History {
 
         unsigned int size();
 
-        char *lastCommand(char *c);
+        History_elem *lastCommand(char *c);
 
-        char *nextCommand(char *c);
+        History_elem *nextCommand(char *c);
 
         static void store_history(History *h, string path);
 
         static History *read_history(string path);
 
-        static void print_history(History *h);
+        void print_history(History *h);
+
+        void moveToEnd();
 
     private:
-        char *lastSimilarCommand(char *c);
+        History_elem *lastSimilarCommand(char *c);
 
-        char *nextSimilarCommand(char *c);
+        History_elem *nextSimilarCommand(char *c);
 
-        char *lastUsedCommand();
+        History_elem *lastUsedCommand();
 
-        char *nextUsedCommand();
+        History_elem *nextUsedCommand();
 
         bool match(const char *c1, const char *c2);
 

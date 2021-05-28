@@ -49,12 +49,12 @@ void setData(char *&lines, char *&updatedCommand, char *&content) {
     if (updatedCommand != nullptr) {
         strcpy(content, updatedCommand);
         lines = content + strlen(content);
+        // *lines='\0';
         updatedCommand = nullptr;
     }
 }
 
 int Reader::getInputCommand(char *lines, History &history, char *path) {
-
     char *content = lines;
     char c;
     int length = 0;
@@ -65,6 +65,7 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
             printf("more than max limit");
         }
         if ((int) c == 127) {
+            history.moveToEnd();
             setData(lines, updatedCommand, content);
             SpecialInput *backspace = Backspace::getInstance();
             content = backspace->onClick(lines, history, content, length, path);
@@ -106,14 +107,33 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                 printf("\r%s%s", prefix.c_str(), content);
             }
         } else {
+            history.moveToEnd();
             setData(lines, updatedCommand, content);
             length++;
+            char*last = content+length;
+            *last='\0';
+            last--;
+            char*ptr=last-1;
+            int cnt = 0;
+            while(last>lines){
+                *last=*ptr;
+                last--;
+                ptr--;
+                cnt++;
+            }
             *lines = c;
             lines++;
+            STORE_CURSOR();
+            CLEAR_OUTPUT_LINE();
+            string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+            printf("\r%s%s", prefix.c_str(), content);
+            RESTORE_CURSOR();
         }
     }
 
     setData(lines, updatedCommand, content);
+    lines=content+length;
    *lines = '\0';
     lines = content;
     return length;

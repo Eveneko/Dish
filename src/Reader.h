@@ -14,6 +14,7 @@
 #include "SpecialInput/Left.h"
 #include "SpecialInput/Right.h"
 #include "SpecialInput/BackSpace.h"
+#include "SpecialInput/KeyboardOperation.h"
 #include "environment.h"
 // #include "Exception/InputOutOfLimitException.h"
 

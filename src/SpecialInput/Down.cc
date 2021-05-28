@@ -16,19 +16,25 @@ Down::Down() {
 
 char *Down::onClick(char *&lines, History &history, char *content, int &length, char *path) {
     *lines = '\0';
-    char *searchResult = history.nextCommand(content);
+    History_elem *searchResult = history.nextCommand(content);
     CLEAR_OUTPUT_LINE();
     if (searchResult != nullptr) {
         std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-        printf("\r%s%s", prefix.c_str(), searchResult);
+        printf("\r%s%s", prefix.c_str(), searchResult->command);
+        length = strlen(searchResult->command);
+        lines = content + length;
+        return searchResult->command;
     } else {
+        history.moveToEnd();
         std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
         printf("\r%s%s", prefix.c_str(), content);
+        length = strlen(content);
+        lines = content + length;
+        
+        return nullptr;
     }
-    lines = content + length;
-    return searchResult;
 }
 
 Down *Down::getInstance() {
