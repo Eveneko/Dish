@@ -28,7 +28,7 @@ class Command {
          * @param parsed_command Struct which describes all the relevant information about the command
          * @param env The shell environment
          */
-        Command(ParsedCommand parsed_command, Environment& env);
+        Command(ParsedCommand parsed_command, Environment& env,History* history);
 
         /**
          * Run the given command,
@@ -114,4 +114,8 @@ class Command {
          * The shell environment.
          */
         Environment& env;
+        /**
+         * The shell history.
+         */
+        History* h;
 };

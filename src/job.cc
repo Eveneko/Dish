@@ -1,11 +1,11 @@
 #include "job.h"
 
-Job::Job(ParsedJob& parsed_job, Environment& env) : env(env) {
+Job::Job(ParsedJob& parsed_job, Environment& env, History* history) : env(env),h(history) {
     for (ParsedPipeline& parsed_pipeline : parsed_job.pipelines) {
         vector<Command> commands;
 
         for (ParsedCommand& parsed_command : parsed_pipeline.commands) {
-            Command command(parsed_command, env);
+            Command command(parsed_command, env,h);
             commands.push_back(command);
         }
 
@@ -27,8 +27,8 @@ void Job::RunAndWait(int job_source, int job_sink) {
     pipelines[0].RunAndWait(job_source, job_sink);
     // assumes follow will work, because it already did the first time &
     // string is identical
-    ParsedJob latter = job_parser.Parse(parsed_pipelines[0].remaining_job_str, env);
-    Job updated_job(latter, env);
+    ParsedJob latter = job_parser.Parse(parsed_pipelines[0].remaining_job_str, env,h);
+    Job updated_job(latter, env,h);
     updated_job.RunAndWait(job_source, job_sink);
     // even grosser recursive implementation!
 }
