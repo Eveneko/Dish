@@ -28,18 +28,31 @@ History::~History() {
     free(this);
 }
 
+void History::clean(){
+    this->line_count = 0;
+    this->his_curr = nullptr;
+    this->head = nullptr;
+    this->tail = nullptr;
+    this->curr = nullptr;
+    this->moveToEnd();
+}
+
 void History::moveToEnd(){
     History_elem *cur = new History_elem();
     cur->prev = tail;
     this->curr = cur;
 }
 
-void History::append(char *item) {
-    this->line_count+=1;
+void History::append(char *item, int line_number) {
+    if(line_number<0){
+        line_number=++this->line_count;
+    }else{
+        this->line_count=line_number;
+    }
     History_elem *tmp = (History_elem *) malloc(sizeof(History_elem));
     if (tmp == NULL) exit(1);
     tmp->command = (char *) malloc(sizeof(char) * (strlen(item) + 1));
-    tmp->line_number=this->line_count;
+    tmp->line_number=line_number;
     if (tmp->command == NULL) exit(1);
     strcpy(tmp->command, item);
     tmp->next = NULL;
@@ -167,18 +180,26 @@ bool History::match(const char *c1, const char *c2) {
 
 void History::store_history(History *h, string path) {
 
+
     ofstream outfile;
     outfile.open(path);
 
     History_elem *pointer = h->tail;
-    for (int i = 0; i < 16; ++i) {
+    if(pointer == nullptr) return;
+    int limit = 16;
+
+    while(limit>0&&pointer->prev!=nullptr){
         pointer = pointer->prev;
+        limit--;
     }
-    pointer = pointer->next;
-    for (int i = 0; i < 16; ++i) {
-        outfile << pointer->command << endl;
+
+        outfile <<pointer->line_number<<"%%" << pointer->command << endl;
+    
+    while(pointer->next!=nullptr){
         pointer = pointer->next;
+        outfile <<pointer->line_number<<"%%" << pointer->command << endl;
     }
+
     outfile.close();
 }
 
@@ -189,18 +210,20 @@ History *History::read_history(string path) {
 
     string line;
     while (getline(infile, line)) {
-        line.erase(0, line.find_first_not_of(" "));
-        char *c = const_cast<char *>((line.c_str()));
-        h1->append(c);
+        size_t i=line.find("%%");
+        // line.erase(0, line.find_first_not_of(" "));
+        char *c = const_cast<char *>((line.substr(i+2).c_str()));
+        int num = atoi(line.substr(0,i).c_str());
+        h1->append(c,num);
     }
     return h1;
 }
 
 void History::print_history() {
-    printf("%s\n", this->head->command);
+    // printf("%s\n", this->head->command);
     History_elem *p = this->head;
     while (p!=this->tail) {
-        printf("%s\n", p->command);
+        printf("line %d: %s\n", p->line_number ,p->command);
         p = p->next;
     }
 }

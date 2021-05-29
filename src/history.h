@@ -36,7 +36,7 @@ class History {
 
         ~History();
 
-        void append(char *c);
+        void append(char *c,int line_number);
 
         char *pop();
 
@@ -55,6 +55,8 @@ class History {
         void print_history();
 
         void moveToEnd();
+
+        void clean();
 
     private:
         History_elem *lastSimilarCommand(char *c);

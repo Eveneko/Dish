@@ -29,8 +29,8 @@ Shell::Shell(int argc, char* argv[]) {
     }
     env.SetVariable("*", all_args);
     env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory());
-    env.SetVariable("history", ProcUtil::GetCurrentWorkingDirectory());
-    history = new History();
+    env.SetVariable("history", ProcUtil::GetCurrentWorkingDirectory()+"/his.txt");
+    history = History::read_history(env.GetVariable("history"));
 }
 
 bool Shell::ParseString(string& job_str) {
@@ -130,7 +130,7 @@ int Shell::StartRepl() {
         }
         char line2[MAXCHAR];
         strcpy(line2,line);
-        history->append(line);
+        history->append(line,-1);
         // remaining_job_str.append(line);
         remaining_job_str.append(line2);
         remaining_job_str.append("\n");
@@ -151,6 +151,8 @@ int Shell::StartRepl() {
 
         RunJobsAndWait();
         remaining_job_str = string();
+        // History::store_history(history,env.GetVariable("history"));
+
     }
 
     if (!remaining_job_str.empty()) {
@@ -159,7 +161,9 @@ int Shell::StartRepl() {
         return 2;
     }
 
-    // history->~History();
+    // History::store_history(history, env.GetVariable("history"));
+    History::store_history(history, env.GetVariable("history"));
+    history->~History();
 
     return stoi(env.GetVariable("?"));
 }
