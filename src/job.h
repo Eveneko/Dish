@@ -25,7 +25,7 @@ class Job {
          * The job is parsed and executed in a Bash-like manner,
          * obeying the rules of Bash as much as possible.
          */
-        Job(ParsedJob& job, Environment& env);
+        Job(ParsedJob& job, Environment& env,History* h);
 
         /**
          * Run the job, including all pipelines and commands contained within.
@@ -63,4 +63,6 @@ class Job {
         vector<ParsedPipeline> parsed_pipelines;
 
         Environment& env;
+
+        History* h;
 };

@@ -1,3 +1,5 @@
+#ifndef DISH_SHELL_H
+#define DISH_SHELL_H
 /**
  * Shell is the top-level class that represents an instance of the Clash
  * command line program. It's primary purpose is to process user input and run
@@ -97,6 +99,7 @@ class Shell {
          * @return the exit code of last command int he
          */
         int StartRepl();
+
         
     private:
         /**
@@ -105,6 +108,14 @@ class Shell {
          */
         Environment env;
 
+
+        /**
+         * The local shell history. Stores history command variables and the
+         * PATH cache.
+         */
+        History *history;
+
+       
         /**
          * Job string parser. Aids us in the complex task of parsing the user's
          * job strings into a useful structured form.
@@ -116,7 +127,6 @@ class Shell {
          */
         vector<Job> jobs;
 
-        History *history;
 };
 
 class ShellException : public exception {
@@ -127,3 +137,5 @@ class ShellException : public exception {
     private:
         string message;
 };
+
+#endif

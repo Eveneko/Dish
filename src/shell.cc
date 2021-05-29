@@ -30,16 +30,17 @@ Shell::Shell(int argc, char* argv[]) {
     env.SetVariable("*", all_args);
     env.SetVariable("lwd", ProcUtil::GetCurrentWorkingDirectory());
     env.SetVariable("history", ProcUtil::GetCurrentWorkingDirectory());
+    history = new History();
 }
 
 bool Shell::ParseString(string& job_str) {
     try {
-        if (job_parser.IsPartialJob(job_str, env)) {
+        if (job_parser.IsPartialJob(job_str, env,history)) {
             // Return failure if this is an incomplete job
             return false;
         } else {
-            ParsedJob parsed_job = job_parser.Parse(job_str, env);
-            jobs.push_back(Job(parsed_job, env));
+            ParsedJob parsed_job = job_parser.Parse(job_str, env,history);
+            jobs.push_back(Job(parsed_job, env,history));
         }
     } catch (exception& e) {
         // Parsed the complete job, but it was invalid
@@ -96,8 +97,6 @@ int Shell::StartRepl() {
     char line[MAXCHAR];
     char path[MAXCHAR];
 
-    history = new History();
-
     while (true) {
         if (isTTY) {
             if(remaining_job_str.length() == 0){
@@ -135,12 +134,12 @@ int Shell::StartRepl() {
 //        free(line);
 
         try {
-            if (job_parser.IsPartialJob(remaining_job_str, env)) {
+            if (job_parser.IsPartialJob(remaining_job_str, env,history)) {
                 // Incomplete job, so get more input from user
                 continue;
             } else {
-                ParsedJob parsed_job = job_parser.Parse(remaining_job_str, env);
-                jobs.push_back(Job(parsed_job, env));
+                ParsedJob parsed_job = job_parser.Parse(remaining_job_str, env,history);
+                jobs.push_back(Job(parsed_job, env,history));
             }
         } catch (exception& e) {
             // Parsed the complete job, but it was invalid

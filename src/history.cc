@@ -187,8 +187,7 @@ History *History::read_history(string path) {
 void History::print_history(History *h) {
     printf("%s\n", h->head->command);
     History_elem *p = h->head;
-    cout << h->head;
-    while (p) {
+    while (p!=h->tail) {
         printf("%s\n", p->command);
         p = p->next;
     }

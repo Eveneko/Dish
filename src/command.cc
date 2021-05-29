@@ -1,7 +1,8 @@
 #include "command.h"
+#include "shell.h"
 
-Command::Command(ParsedCommand parsed_command, Environment& env) :
-    pid(0), env(env) {
+Command::Command(ParsedCommand parsed_command, Environment& env, History* his) :
+    pid(0), env(env),h(his){
 
     words = parsed_command.words;
     input_file = parsed_command.input_file;
@@ -156,12 +157,12 @@ bool Command::RunBuiltin() {
         return true;
     }
 
-    // if (program == "history") {
-    //     if (words.size() == 1) {
-    //         History::print_history();
-    //     }
-    // }
-
+    if (program == "history") {
+         if (words.size() == 1) {
+             History::print_history(h);
+         }
+         return true;
+    }
     return false;
 }
 
