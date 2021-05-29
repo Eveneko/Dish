@@ -76,6 +76,10 @@ bool Command::RunBuiltin() {
 
     if (program == "exit") {
         if (words.size() == 1) {
+            // string path = env.GetVariable("history");
+            // History::store_history(h, "/home/olivia/Desktop/Dish/a.txt");
+            // h->~History();
+            History::store_history(h,env.GetVariable("history"));
             exit(0);
         } else if (words.size() >= 2) {
             int status;
@@ -158,8 +162,12 @@ bool Command::RunBuiltin() {
     }
 
     if (program == "history") {
+        string clean = "clean";
          if (words.size() == 1) {
              h->print_history();
+         }else if(strcmp(words[1].c_str(),clean.c_str())==0){
+            //  printf("clean the history");
+            h->clean();
          }
          return true;
     }
