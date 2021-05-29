@@ -196,11 +196,10 @@ History *History::read_history(string path) {
     return h1;
 }
 
-void History::print_history(History *h) {
-    printf("%s\n", h->head->command);
-    History_elem *p = h->head;
-    cout << h->head;
-    while (p) {
+void History::print_history() {
+    printf("%s\n", this->head->command);
+    History_elem *p = this->head;
+    while (p!=this->tail) {
         printf("%s\n", p->command);
         p = p->next;
     }

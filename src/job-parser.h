@@ -7,6 +7,7 @@
 #include "string-util.h"
 #include "environment.h"
 #include "proc-util.h"
+#include "history.h"
 
 using namespace std;
 
@@ -87,7 +88,7 @@ class JobParser {
          *
          * @return boolean Whether this is a partial job.
          */
-        static bool IsPartialJob(string& job_str, Environment& env);
+        static bool IsPartialJob(string& job_str, Environment& env, History* history);
 
         /**
          * Parse method will completely parse a command,
@@ -103,7 +104,7 @@ class JobParser {
          *
          * @return ParsedJob The fully parsed job content.
          */
-        static ParsedJob Parse(string& job_str, Environment& env);
+        static ParsedJob Parse(string& job_str, Environment& env, History* history);
 
     private:
         /**
@@ -117,7 +118,7 @@ class JobParser {
          * 
          * @return ParsedJob - the fully parsed job content.
          */
-        static ParsedJob Parse(string& job_str, Environment& env, bool should_execute);
+        static ParsedJob Parse(string& job_str, Environment& env, History* history, bool should_execute);
 
         /**
          * Parses an individual pipeline from command.
@@ -125,7 +126,7 @@ class JobParser {
          * to be run before parsing subsequent commands (since this may affect variable substitutions), 
          * but experimentation with bash suggests that parsing is approximately checked up-front (except subcommands).
          */
-        static ParsedPipeline ParsePipeline(string& job_str_copy, Environment& env, bool should_execute);
+        static ParsedPipeline ParsePipeline(string& job_str_copy, Environment& env,  History* history,bool should_execute);
 
         /**
          * Will attempt to consume input until a valid closing quote is found.
@@ -137,12 +138,12 @@ class JobParser {
          * @param env The environment which has variables we may substitute
          * @return String content inside the quotes
          */
-        static string ParseDoubleQuote(string& job_str_copy, Environment& env, bool should_execute);
-        static string ParseBacktick(string& job_str_copy, Environment& env, bool should_execute);
+        static string ParseDoubleQuote(string& job_str_copy, Environment& env,  History* history,bool should_execute);
+        static string ParseBacktick(string& job_str_copy, Environment& env,History* history, bool should_execute);
         static string ParseSingleQuote(string& job_str_copy);
         static string ParseBackslash(string& job_str_copy, char mode = ' ');
-        static string ParseVariable(string& job_str_copy, Environment& env);
-        static string ParseTilde(string& job_str_copy, Environment& env);
+        static string ParseVariable(string& job_str_copy, Environment& env,History* history);
+        static string ParseTilde(string& job_str_copy, Environment& env,History* history);
 };
 
 class IncompleteParseException : public exception {

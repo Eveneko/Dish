@@ -141,6 +141,9 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
             RESTORE_CURSOR();
         }
     }
+            if(c==EOF){
+            printf("YEAAA");
+        }
 
     setData(lines, updatedCommand, content);
     lines=content+length;

@@ -52,7 +52,7 @@ class History {
 
         static History *read_history(string path);
 
-        void print_history(History *h);
+        void print_history();
 
         void moveToEnd();
 

@@ -4,9 +4,9 @@
 #include <cstring>
 #include <cctype>
 
-bool JobParser::IsPartialJob(string& job_str, Environment& env) {
+bool JobParser::IsPartialJob(string& job_str, Environment& env,History* history) {
     try {
-        Parse(job_str, env, false);
+        Parse(job_str, env,history, false);
     } catch (IncompleteParseException& ipe) {
         //incomplete job given, need more lines
         return true;
@@ -14,18 +14,18 @@ bool JobParser::IsPartialJob(string& job_str, Environment& env) {
     return false;
 }
 
-ParsedJob JobParser::Parse(string& job_str, Environment& env) {
-    return Parse(job_str, env, true);
+ParsedJob JobParser::Parse(string& job_str, Environment& env,History* history) {
+    return Parse(job_str, env,history, true);
 }
 
 //overview: will parse individual pipelines... and keep continuing until whole
 //string is consumed (throwing if last pipeline is incomplete)
 
-ParsedJob JobParser::Parse(string& job_str, Environment& env, bool should_execute) {
+ParsedJob JobParser::Parse(string& job_str, Environment& env,History* history, bool should_execute) {
     string job_str_copy(job_str);
     ParsedJob job;
     while(!job_str_copy.empty()) {
-        ParsedPipeline pipeline = ParsePipeline(job_str_copy, env, should_execute);
+        ParsedPipeline pipeline = ParsePipeline(job_str_copy, env,history, should_execute);
         pipeline.remaining_job_str = string(job_str_copy);
         if (pipeline.commands.size() > 0) job.pipelines.push_back(pipeline);
     }
@@ -33,7 +33,7 @@ ParsedJob JobParser::Parse(string& job_str, Environment& env, bool should_execut
 }
 
 
-ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env, bool should_execute) {
+ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env,History* history, bool should_execute) {
 
     ParsedCommand command;
     ParsedPipeline pipeline;
@@ -147,14 +147,14 @@ ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env, 
             }
             case '~': {
                 if (partial_word.empty() && !quote_word) {
-                  partial_word.append(ParseTilde(job_str_copy, env));
+                  partial_word.append(ParseTilde(job_str_copy, env, history));
                 } else {
                   partial_word.append("~");
                 }
                 continue;
             }
             case '\"': {
-                partial_word.append(ParseDoubleQuote(job_str_copy, env, should_execute));
+                partial_word.append(ParseDoubleQuote(job_str_copy, env,history, should_execute));
                 quote_word = true;
                 continue;
             }
@@ -164,7 +164,7 @@ ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env, 
                 continue;
             }
             case '`': {
-                partial_word.append(ParseBacktick(job_str_copy, env, should_execute));
+                partial_word.append(ParseBacktick(job_str_copy, env,history, should_execute));
                 continue;
             }
             case '\\': {
@@ -173,7 +173,7 @@ ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env, 
             }
             case '$': {
                 //to word break, places variable to parse back on job_str_copy
-                string nonparse_output = ParseVariable(job_str_copy, env);
+                string nonparse_output = ParseVariable(job_str_copy, env,history);
                 if (nonparse_output == string("ambiguous if redirect")) {
                     if (next_word_redirects_in) {
                         throw FatalParseException("Ambiguous input redirection");
@@ -194,7 +194,7 @@ ParsedPipeline JobParser::ParsePipeline(string& job_str_copy, Environment& env, 
 }
 
 
-string JobParser::ParseDoubleQuote(string& job_str_copy, Environment& env,
+string JobParser::ParseDoubleQuote(string& job_str_copy, Environment& env,History* history,
         bool should_execute) {
     string quoted = string();
     int match_index;
@@ -207,7 +207,7 @@ string JobParser::ParseDoubleQuote(string& job_str_copy, Environment& env,
                 return quoted;
             }
             case '`': {
-                quoted.append(ParseBacktick(job_str_copy, env, should_execute));
+                quoted.append(ParseBacktick(job_str_copy, env, history,should_execute));
                 continue;
             }
             case '\\': {
@@ -215,7 +215,7 @@ string JobParser::ParseDoubleQuote(string& job_str_copy, Environment& env,
                 continue;
             }
             case '$': {
-                string nonparsed_output = ParseVariable(job_str_copy, env);
+                string nonparsed_output = ParseVariable(job_str_copy, env,history);
                 if (nonparsed_output != string("ambiguous if redirect")) {
                     quoted.append(nonparsed_output);
                 }
@@ -274,7 +274,7 @@ string JobParser::ParseBackslash(string& job_str_copy, char mode) {
     throw IncompleteParseException("Unknown backslash mode", '\\');
 }
 
-string JobParser::ParseVariable(string& job_str_copy, Environment& env) {
+string JobParser::ParseVariable(string& job_str_copy, Environment& env,History* history) {
     char first_var_char = job_str_copy[0];
     string variable_name;
     if (string("*?#").find(first_var_char) != string::npos ||
@@ -315,7 +315,7 @@ string JobParser::ParseVariable(string& job_str_copy, Environment& env) {
 }
 
 
-string JobParser::ParseBacktick(string& job_str_copy, Environment& env,
+string JobParser::ParseBacktick(string& job_str_copy, Environment& env,History* history,
         bool should_execute) {
     string quoted = string();
     int match_index;
@@ -331,8 +331,8 @@ string JobParser::ParseBacktick(string& job_str_copy, Environment& env,
                     vector<int> fds = FileUtil::CreatePipe();
                     int read = fds[0];
                     int write = fds[1];
-                    ParsedJob parsed_job = Parse(quoted, env);
-                    Job(parsed_job, env).RunAndWait(STDIN_FILENO, write);
+                    ParsedJob parsed_job = Parse(quoted, env,history);
+                    Job(parsed_job, env, history).RunAndWait(STDIN_FILENO, write);
                     FileUtil::CloseDescriptor(write);
                     command_output_str = FileUtil::ReadFileDescriptor(read);
                     FileUtil::CloseDescriptor(read);
@@ -362,7 +362,7 @@ string JobParser::ParseBacktick(string& job_str_copy, Environment& env,
     throw IncompleteParseException("Incomplete job given, no valid closing backtick (`)", '`');
 }
 
-string JobParser::ParseTilde(string& job_str_copy, Environment& env) {
+string JobParser::ParseTilde(string& job_str_copy, Environment& env,History* history) {
     int match_index = job_str_copy.find_first_of("/\t\n ;|<>");
     string matched_str = job_str_copy.substr(0,match_index);
     if (matched_str.size() == 0) {
