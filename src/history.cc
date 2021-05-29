@@ -17,6 +17,7 @@ History_elem::History_elem(char *command,int line_number) {
 
 History::History() {
     this->line_count = 0;
+    this->his_curr = nullptr;
     this->head = nullptr;
     this->tail = nullptr;
     this->curr = nullptr;

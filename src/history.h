@@ -27,6 +27,7 @@ public:
 class History {
     public:
         int line_count;
+        History_elem *his_curr;
         History_elem *head;
         History_elem *tail;
         History_elem *curr;

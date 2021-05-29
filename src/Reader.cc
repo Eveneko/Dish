@@ -61,10 +61,12 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
     char *updatedCommand = nullptr;
     while ((c = get1char()) != '\n') {
         if (length > MAX_CMD) {
+            history.his_curr=nullptr;
             // throw InputOutOfLimitException(MAX_CMD);
             printf("more than max limit");
         }
         if ((int) c == 127) {
+            history.his_curr=nullptr;
             history.moveToEnd();
             setData(lines, updatedCommand, content);
             SpecialInput *backspace = Backspace::getInstance();
@@ -73,9 +75,11 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
             // Input the direction button
             if ((c = get1char()) == '[') {
                 if ((c = get1char()) == 'A') {
+                    history.his_curr=nullptr;
                     SpecialInput *up = Up::getInstance();
                     updatedCommand = up->onClick(lines, history, content, length, path);
                 } else if (c == 'B') {
+                    history.his_curr=nullptr;
                     SpecialInput *down = Down::getInstance();
                     updatedCommand = down->onClick(lines, history, content, length, path);
                 
@@ -85,17 +89,22 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                     right->onClick(lines, history, content, length, path);
                     // printf("right\n");
                 } else if (c == 'D') {
+                    history.his_curr=nullptr;
                     setData(lines, updatedCommand, content);
                     SpecialInput *left = Left::getInstance();
                     left->onClick(lines, history, content, length, path);
                 }
             }
         } else if (c == '\t') {
+            history.his_curr=nullptr;
             string tmp_cmd = content;
             set<string> path = env.FindPossibleCommands(tmp_cmd);
             printf("\n");
             if(path.size() == 0) {
                 printf("%s not found\n", lines);
+                string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
+                        + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
+                printf("\r%s%s", prefix.c_str(), content);
             }else {
                 for(set<string>::iterator it=path.begin() ;it!=path.end();it++)
                 {
@@ -107,6 +116,7 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                 printf("\r%s%s", prefix.c_str(), content);
             }
         } else {
+            history.his_curr=nullptr;
             history.moveToEnd();
             setData(lines, updatedCommand, content);
             length++;
