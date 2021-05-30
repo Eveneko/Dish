@@ -1,6 +1,8 @@
-1%%history
+1%%ls
 2%%history
 3%%history
-4%%ls
-5%%history
-6%%exit
+4%%exit
+5%%ls
+6%%history
+7%%exit
+8%%exit

@@ -18,7 +18,7 @@ private:
     Right();
 
 public:
-    char *onClick(char *&lines, History &history, char *content, int &length, char *path);
+    char *onClick(char *&lines, History &history, char *content, int &length, char *path, Environment &env);
 
     static Right *getInstance();
 

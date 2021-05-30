@@ -14,14 +14,16 @@ Right::Right() {
 
 }
 
-char *Right::onClick(char *&lines, History &history, char *content, int &length, char *path) {
+char *Right::onClick(char *&lines, History &history, char *content, int &length, char *path, Environment &env) {
 //||(history.his_curr!=nullptr&&length==strlen(history.his_curr->command))
     if(lines - content != length){
+        string str = content;
+        str = env.setColor(str);
         STORE_CURSOR();
         CLEAR_OUTPUT_LINE();
         std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-        printf("\r%s%s", prefix.c_str(), content);
+        printf("\r%s%s", prefix.c_str(), str.c_str());
         RESTORE_CURSOR();
 
         MOVE_LEFT(3);
@@ -42,11 +44,13 @@ char *Right::onClick(char *&lines, History &history, char *content, int &length,
     }
 
     if(result==nullptr){
+        string str = content;
+        str = env.setColor(str);
         STORE_CURSOR();
         CLEAR_OUTPUT_LINE();
         std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-        printf("\r%s%s", prefix.c_str(), content);
+        printf("\r%s%s", prefix.c_str(), str.c_str());
         RESTORE_CURSOR();
         MOVE_LEFT(4);
 
@@ -60,6 +64,7 @@ char *Right::onClick(char *&lines, History &history, char *content, int &length,
     std::string str_extension = result->command + length;
     std::string str_show=str_content+"\033[90m"+str_extension+"\033[0m";
     
+    str_show = env.setColor(str_show);
     STORE_CURSOR();
     CLEAR_OUTPUT_LINE();
     std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 

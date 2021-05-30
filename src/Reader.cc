@@ -70,41 +70,44 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
             history.moveToEnd();
             setData(lines, updatedCommand, content);
             SpecialInput *backspace = Backspace::getInstance();
-            content = backspace->onClick(lines, history, content, length, path);
+            content = backspace->onClick(lines, history, content, length, path,env);
         } else if (c == '\033') {
             // Input the direction button
             if ((c = get1char()) == '[') {
                 if ((c = get1char()) == 'A') {
                     history.his_curr=nullptr;
                     SpecialInput *up = Up::getInstance();
-                    updatedCommand = up->onClick(lines, history, content, length, path);
+                    updatedCommand = up->onClick(lines, history, content, length, path,env);
                 } else if (c == 'B') {
                     history.his_curr=nullptr;
                     SpecialInput *down = Down::getInstance();
-                    updatedCommand = down->onClick(lines, history, content, length, path);
+                    updatedCommand = down->onClick(lines, history, content, length, path,env);
                 
                 } else if (c == 'C') {
                     setData(lines, updatedCommand, content);
                     SpecialInput *right = Right::getInstance();
-                    right->onClick(lines, history, content, length, path);
+                    right->onClick(lines, history, content, length, path,env);
                     // printf("right\n");
                 } else if (c == 'D') {
                     history.his_curr=nullptr;
                     setData(lines, updatedCommand, content);
                     SpecialInput *left = Left::getInstance();
-                    left->onClick(lines, history, content, length, path);
+                    left->onClick(lines, history, content, length, path,env);
                 }
             }
         } else if (c == '\t') {
             history.his_curr=nullptr;
             string tmp_cmd = content;
             set<string> path = env.FindPossibleCommands(tmp_cmd);
+
+            string str = content;
+            str = env.setColor(str);
             printf("\n");
             if(path.size() == 0) {
                 printf("%s not found\n", lines);
                 string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-                printf("\r%s%s", prefix.c_str(), content);
+                printf("\r%s%s", prefix.c_str(), str.c_str());
             }else {
                 for(set<string>::iterator it=path.begin() ;it!=path.end();it++)
                 {
@@ -113,7 +116,7 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
                 printf("\n");
                 string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-                printf("\r%s%s", prefix.c_str(), content);
+                printf("\r%s%s", prefix.c_str(), str.c_str());
             }
         } else {
             history.his_curr=nullptr;
@@ -133,11 +136,14 @@ int Reader::getInputCommand(char *lines, History &history, char *path) {
             }
             *lines = c;
             lines++;
+
+            string str = content;
+            str = env.setColor(str);
             STORE_CURSOR();
             CLEAR_OUTPUT_LINE();
             string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
                         + " \033[44m" + ProcUtil::GetCurrentWorkingDirectory() + "\033[0m" + " $ ";
-            printf("\r%s%s", prefix.c_str(), content);
+            printf("\r%s%s", prefix.c_str(), str.c_str());
             RESTORE_CURSOR();
         }
     }

@@ -98,6 +98,11 @@ class Environment {
         string FindProgramPath(string& program_name);
 
         set<string> FindPossibleCommands(string& program_name);
+        bool FindExactCommands(string& program_name);
+
+        
+        string setColor(string path);
+
 
     private:
         void PopulatePathCache();
