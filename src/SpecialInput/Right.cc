@@ -61,10 +61,10 @@ char *Right::onClick(char *&lines, History &history, char *content, int &length,
         history.his_curr=nullptr;
     }
     std::string str_content = content;
+    str_content = env.setColor(str_content);
     std::string str_extension = result->command + length;
     std::string str_show=str_content+"\033[90m"+str_extension+"\033[0m";
     
-    str_show = env.setColor(str_show);
     STORE_CURSOR();
     CLEAR_OUTPUT_LINE();
     std::string prefix = ProcUtil::GetUserName() + "@" + ProcUtil::GetHostName() 
@@ -72,6 +72,7 @@ char *Right::onClick(char *&lines, History &history, char *content, int &length,
     printf("\r%s%s", prefix.c_str(), str_show.c_str());
     RESTORE_CURSOR();
     if(!flag){
+        history.moveToEnd();
         MOVE_LEFT(4);
     }else{
         MOVE_LEFT(3);
