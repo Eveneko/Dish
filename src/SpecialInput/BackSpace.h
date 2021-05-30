@@ -20,7 +20,7 @@ private:
     Backspace();
 
 public:
-    char *onClick(char *&lines, History &history, char *content, int &length, char *path);
+    char *onClick(char *&lines, History &history, char *content, int &length, char *path, Environment &env);
 
     static Backspace *getInstance();
 
