@@ -21,7 +21,7 @@
 
 using namespace std;
 
-unsigned long BUFFER_SIZE = 1024;
+static unsigned long BUFFER_SIZE = 1024;
 
 class FileUtil {
     public:

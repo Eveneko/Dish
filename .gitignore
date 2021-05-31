@@ -53,3 +53,8 @@ dkms.conf
 
 # MAC
 *.DS_Store
+
+# IDE
+.vscode
+
+./dish

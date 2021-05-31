@@ -94,6 +94,74 @@ string Environment::FindProgramPath(string& program_name)  {
     return first_program_path;
 }
 
+set<string> Environment::FindPossibleCommands(string& program_name){
+    string path = variables.count("PATH")
+        ? variables["PATH"]
+        : DEFAULT_PATH_VAR;
+
+    vector<string> search_paths = StringUtil::Split(path, ":");
+    set<string> ans;
+
+    for (string search_path : search_paths) {
+        vector<string> entries = FileUtil::GetDirectoryEntries(search_path);
+        for (string& entry : entries) {
+            if (entry.find(program_name)==0) {
+                ans.insert(entry);
+            }
+        }
+    }
+    return ans;
+}
+
+bool Environment::FindExactCommands(string& program_name){
+    string path = variables.count("PATH")
+        ? variables["PATH"]
+        : DEFAULT_PATH_VAR;
+
+    vector<string> search_paths = StringUtil::Split(path, ":");
+    set<string> ans;
+
+    for (string search_path : search_paths) {
+        vector<string> entries = FileUtil::GetDirectoryEntries(search_path);
+        for (string& entry : entries) {
+            if (strcmp(program_name.c_str(),entry.c_str())==0) {
+                return true;
+            }
+        }
+    }
+    if(program_name=="cd") return true;
+    if(program_name=="pwd") return true;
+    if(program_name=="exit") return true;
+    if(program_name=="printenv") return true;
+    if(program_name=="set") return true;
+    if(program_name=="unset") return true;
+    if(program_name=="export") return true;
+    if(program_name=="which") return true;
+    if(program_name=="history") return true;
+
+    return false;
+}
+
+string Environment::setColor(string cmd){
+    size_t i = cmd.find(" ");
+    string first,second;
+    if(i==cmd.npos){
+        first = cmd;
+        second = "";
+    }else{
+        first = cmd.substr(0,i);
+        second = cmd.substr(i);
+    }
+    // set<string> path = this->FindPossibleCommands(first);
+    // if(path.size() == 0){
+    if(this->FindExactCommands(first)){
+        return "\033[0;32m"+first+"\033[0m"+second;
+    }else{
+        return "\033[0;31m" + first + "\033[0m"+second;
+    }
+}
+
+
 void Environment::PopulatePathCache() {
     path_cache.clear();
 
