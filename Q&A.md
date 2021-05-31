@@ -1,8 +1,8 @@
-# Record
+# Q&A
 
 <!-- TOC -->
 
-- [Record](#record)
+- [Q&A](#qa)
   - [Problem](#problem)
     - [Server & Environment](#server--environment)
     - [Makefile](#makefile)
